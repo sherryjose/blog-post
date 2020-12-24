@@ -1,0 +1,48 @@
+<div class="container-fluid home-wrapper">
+    <header class="shadow p-4 p-sm-2 mb-3 rounded-bottom text-center">
+        <h2>Welcome to Daily Blogs</h2>
+        <h5>Fresh posts each day!</h5>
+    </header>
+    <section class="row m-1 justify-content-center post-list">
+        <article class="m-2 col-sm-12 col-md-5 col-lg-5 py-2 post-card rounded"
+            *ngFor="let post of posts; let i = index">
+            <h5>{{ post.title }}</h5>
+            <span id="bodyStart{{i}}">{{post.body | slice:0:120}}</span>
+            <span id="ellipsis{{i}}">...</span>
+            <span id="bodyEnd{{i}}">{{post.body | slice:120}}</span>
+            <button type="button" class="btn btn-link post-link d-block float-right"
+                (click)="onReadToggle($event, i)">Read
+                More</button>
+            <button type="button" id="commentBtn{{i}}" class="btn btn-primary float-right clear-right"
+                data-toggle="modal" data-target="#commentModal">Add
+                Comment</button>
+            <section *ngIf="commentsMap.get(post.id)" class="clear-right" id="comment{{i}}">
+                <h5 class="font-bold">Comments</h5>
+                <div *ngFor="let comment of commentsMap.get(post.id)">
+                    <div class="sub-title font-bold">{{comment.name}}</div>
+                    <i>{{comment.body}}</i>
+                </div>
+            </section>
+        </article>
+    </section>
+</div>
+
+<!-- Comment Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title font-bold" id="commentModalTitle">Comment details</h5>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" placeholder="Enter email" />
+                <input type="text" class="form-control" placeholder="Enter name" />
+                <textarea cols="30" class="form-control" rows="5" placeholder="Enter comment"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

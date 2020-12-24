@@ -1,0 +1,49 @@
+@import 'src/variables';
+
+header {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.8);
+    border-radius: 50%;
+}
+
+.post-list {
+
+    .post-card {
+        background-color: #ffffff;
+    }
+
+    h5 {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .sub-title {
+        color: $accent;
+    }
+}
+
+.btn:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+.btn-link:focus {
+    text-decoration: none;
+    color: #0056b3;
+}
+
+span[id^="bodyEnd"] {
+    display: none;
+}
+
+button[id^="commentBtn"] {
+    display: none;
+}
+
+.clear-right {
+    clear: right;
+}
+
+input,
+textarea {
+    margin: 0.5rem auto;
+}
