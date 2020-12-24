@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ICommentData } from '../models/comment.model';
-import { IPost, IPostData } from '../models/post.model';
+import { IPostData } from '../models/post.model';
 import { PostService } from '../services/post.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -11,14 +11,19 @@ import { PostService } from '../services/post.service';
 })
 export class HomeComponent implements OnInit {
   posts: IPostData[];
-  isCollapsed = true;
+  userMap = new Map<number, string>();
   commentsMap = new Map<number, ICommentData[]>();
-  constructor(private postService: PostService, private formBuilder: FormBuilder) { }
+  constructor(private postService: PostService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe(response =>
-      this.posts = response.data
-    );
+    this.postService.getPosts().subscribe(response => {
+      this.posts = response.data;
+      this.posts.forEach(post => {
+        this.userService.getUserDetails(post.user_id).subscribe(response => {
+          this.userMap.set(response.data.id, response.data.name);
+        })
+      });
+    });
   }
 
   onReadToggle(event, index) {
@@ -27,12 +32,9 @@ export class HomeComponent implements OnInit {
       document.getElementById(`bodyEnd${index}`).style.display = 'inline';
       event.target.innerHTML = 'Read Less';
       document.getElementById(`commentBtn${index}`).style.display = 'block';
-
       this.postService.getComments(this.posts[index].id).subscribe(response => {
         if (response.data.length) {
           this.commentsMap.set(response.data[0].post_id, [...response.data])
-          console.log(this.commentsMap.get(response.data[0].post_id)[0].body)
-          console.log(this.commentsMap.keys()[0])
         }
       });
     } else {

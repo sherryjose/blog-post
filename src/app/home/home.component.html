@@ -6,7 +6,8 @@
     <section class="row m-1 justify-content-center post-list">
         <article class="m-2 col-sm-12 col-md-5 col-lg-5 py-2 post-card rounded"
             *ngFor="let post of posts; let i = index">
-            <h5>{{ post.title }}</h5>
+            <h5 class="mb-1">{{ post.title }}</h5>
+            <div class="sub-title mb-1"><strong>{{userMap.get(post.user_id)}}</strong></div>
             <span id="bodyStart{{i}}">{{post.body | slice:0:120}}</span>
             <span id="ellipsis{{i}}">...</span>
             <span id="bodyEnd{{i}}">{{post.body | slice:120}}</span>
@@ -18,7 +19,7 @@
                 Comment</button>
             <section *ngIf="commentsMap.get(post.id)" class="clear-right" id="comment{{i}}">
                 <h5 class="font-bold">Comments</h5>
-                <div *ngFor="let comment of commentsMap.get(post.id)">
+                <div class="mb-1" *ngFor="let comment of commentsMap.get(post.id)">
                     <div class="sub-title font-bold">{{comment.name}}</div>
                     <i>{{comment.body}}</i>
                 </div>

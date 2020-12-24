@@ -24,6 +24,12 @@ body {
     border-color: $accent;
 }
 
+.btn-primary.focus,
+.btn-primary:focus,
+.btn-primary:hover {
+    background-color: #a8111c;
+}
+
 .font-bold {
     font-weight: bold;
 }
