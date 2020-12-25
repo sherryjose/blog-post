@@ -36,7 +36,8 @@ span[id^="bodyEnd"] {
     display: none;
 }
 
-button[id^="commentBtn"] {
+button[id^="commentBtn"],
+button[id^="saveCommentBtn"] {
     display: none;
 }
 
@@ -51,6 +52,10 @@ section[id^="comment"] {
 input,
 textarea {
     margin: 0.5rem auto;
+}
+
+textarea {
+    display: none;
 }
 
 #backdrop.modal-backdrop {

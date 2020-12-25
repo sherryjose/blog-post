@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -21,7 +21,7 @@ export class PostService {
     return this.httpClient.get<IComment>(`${this.postApi}/${postId}/comments`);
   }
 
-  createComment(postId, comment) {
-    return this.httpClient.post(`${this.postApi}/${postId}/comments`, comment);
+  createComment(postId, comment): Observable<any> {
+    return this.httpClient.post<any>(`${this.postApi}/${postId}/comments`, comment, { headers: new HttpHeaders().set('Authorization', 'Bearer <Use Private Acces Token>') });
   }
 }

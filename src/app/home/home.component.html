@@ -17,8 +17,12 @@
                 (click)="onReadToggle($event, i)">Read
                 More</button>
             <button type="button" id="commentBtn{{i}}" class="btn btn-primary mb-2 float-right clear-right"
-                (click)=openUserModal()>Add
+                (click)=openUserModal(i)>Add
                 Comment</button>
+            <textarea id="commentBox{{i}}" [formControl]="comment" class="form-control" cols="30" rows="5"
+                placeholder="Enter comment"></textarea>
+            <button id="saveCommentBtn{{i}}" type="button" class="btn btn-primary mb-2 float-right clear-right"
+                (click)=onSaveComment(i)>Save</button>
             <section *ngIf="commentsMap.get(post.id)" class="clear-right p-2" id="comment{{i}}">
                 <h5 class="font-bold">Comments</h5>
                 <hr class="my-2" />

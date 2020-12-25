@@ -15,8 +15,8 @@ export class UserService {
     return this.httpClient.get<IUser>(`${this.userApi}/${userId}`);
   }
 
-  createUser(user) {
-    return this.httpClient.post(this.userApi, user, { headers: new HttpHeaders().set('Authorization', user.email) });
+  createUser(user): Observable<any> {
+    return this.httpClient.post<any>(this.userApi, user, { headers: new HttpHeaders().set('Authorization', 'Bearer <Use Private Acces Token>') });
   }
 
 }

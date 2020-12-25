@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 import { ICommentData } from '../models/comment.model';
 import { IPostData } from '../models/post.model';
 import { PostService } from '../services/post.service';
@@ -14,8 +15,9 @@ export class HomeComponent implements OnInit {
   posts: IPostData[];
   userMap = new Map<number, string>();
   commentsMap = new Map<number, ICommentData[]>();
+  comment = new FormControl('', Validators.required);
   userForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private postService: PostService, private userService: UserService) { }
+  constructor(private formBuilder: FormBuilder, private cookieservice: CookieService, private postService: PostService, private userService: UserService) { }
 
   ngOnInit() {
     this.createUserForm();
@@ -25,7 +27,9 @@ export class HomeComponent implements OnInit {
   createUserForm() {
     this.userForm = this.formBuilder.group({
       email: ['', Validators.required],
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      gender: ['Female'],
+      status: ['Active']
     })
   }
 
@@ -63,14 +67,42 @@ export class HomeComponent implements OnInit {
   onCreateUser() {
     if (this.userForm.valid) {
       this.userService.createUser(this.userForm.value).subscribe(response => {
+        if (response.code === 201) {
+          this.cookieservice.set('user', JSON.stringify(response.data));
+          this.closeUserModal();
+        }
       });
     }
   }
 
-  openUserModal() {
-    document.getElementById("backdrop").style.display = "block";
-    document.getElementById("userModal").style.display = "block";
-    document.getElementById("userModal").classList.add("show");
+  onSaveComment(index) {
+    console.log(document.getElementById(`commentBox${index}`).innerText);
+    if (this.comment.valid) {
+      const comment = {
+        name: JSON.parse(this.cookieservice.get('user')).name,
+        email: JSON.parse(this.cookieservice.get('user')).email,
+        body: this.comment.value
+      };
+      this.postService.createComment(this.posts[index].id, comment).subscribe(response => {
+        if (response.code === 201) {
+          this.commentsMap.set(this.posts[index].id, this.commentsMap.get(this.posts[index].id) ? this.commentsMap.get(this.posts[index].id).concat(response.data) : [response.data]);
+          document.getElementById(`commentBox${index}`).style.display = 'none';
+          document.getElementById(`saveCommentBtn${index}`).style.display = 'none';
+          this.comment.patchValue('');
+        }
+      })
+    }
+  }
+
+  openUserModal(index) {
+    if (!this.cookieservice.check('user')) {
+      document.getElementById("backdrop").style.display = "block";
+      document.getElementById("userModal").style.display = "block";
+      document.getElementById("userModal").classList.add("show");
+    } else {
+      document.getElementById(`commentBox${index}`).style.display = 'block';
+      document.getElementById(`saveCommentBtn${index}`).style.display = 'block';
+    }
   }
 
   closeUserModal() {
