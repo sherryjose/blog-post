@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
   commentsMap = new Map<number, ICommentData[]>();
   comment = new FormControl('', Validators.required);
   userForm: FormGroup;
+  authError: string;
+
   constructor(private formBuilder: FormBuilder, private cookieservice: CookieService, private postService: PostService, private userService: UserService) { }
 
   ngOnInit() {
@@ -64,19 +66,23 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onCreateUser() {
+  onVerifyUser() {
     if (this.userForm.valid) {
       this.userService.createUser(this.userForm.value).subscribe(response => {
-        if (response.code === 201) {
-          this.cookieservice.set('user', JSON.stringify(response.data));
+        if (response.code === 201 || response.code === 422) {
+          this.cookieservice.set('user', JSON.stringify(this.userForm.value));
           this.closeUserModal();
+          this.userForm.patchValue({ email: '', name: '' });
+          this.authError = '';
+        }
+        if (response.code === 401) {
+          this.authError = response.data.message;
         }
       });
     }
   }
 
   onSaveComment(index) {
-    console.log(document.getElementById(`commentBox${index}`).innerText);
     if (this.comment.valid) {
       const comment = {
         name: JSON.parse(this.cookieservice.get('user')).name,
@@ -96,6 +102,8 @@ export class HomeComponent implements OnInit {
 
   openUserModal(index) {
     if (!this.cookieservice.check('user')) {
+      this.userForm.patchValue({ email: '', name: '' });
+      this.authError = '';
       document.getElementById("backdrop").style.display = "block";
       document.getElementById("userModal").style.display = "block";
       document.getElementById("userModal").classList.add("show");

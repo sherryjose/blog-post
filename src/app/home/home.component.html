@@ -40,16 +40,17 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title title font-bold" id="userModalTitle">New User Registration</h5>
+                <h5 class="modal-title title font-bold" id="userModalTitle">User Details</h5>
             </div>
-            <form [formGroup]="userForm" (ngSubmit)="onCreateUser()">
+            <form [formGroup]="userForm" (ngSubmit)="onVerifyUser()">
                 <div class="modal-body">
                     <input type="text" formControlName="email" class="form-control" placeholder="Enter email" />
                     <input type="text" formControlName="name" class="form-control" placeholder="Enter name" />
+                    <div class="alert alert-danger mb-2" *ngIf="authError">{{authError}}</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="closeUserModal()">Close</button>
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Verify</button>
                 </div>
             </form>
         </div>

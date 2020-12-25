@@ -22,6 +22,6 @@ export class PostService {
   }
 
   createComment(postId, comment): Observable<any> {
-    return this.httpClient.post<any>(`${this.postApi}/${postId}/comments`, comment, { headers: new HttpHeaders().set('Authorization', 'Bearer <Use Private Acces Token>') });
+    return this.httpClient.post<any>(`${this.postApi}/${postId}/comments`, comment, { headers: new HttpHeaders().set('Authorization', 'Bearer PRIVATE_ACCESS_TOKEN') });
   }
 }
