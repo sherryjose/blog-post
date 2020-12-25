@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ICommentData } from '../models/comment.model';
 import { IPostData } from '../models/post.model';
 import { PostService } from '../services/post.service';
@@ -13,9 +14,22 @@ export class HomeComponent implements OnInit {
   posts: IPostData[];
   userMap = new Map<number, string>();
   commentsMap = new Map<number, ICommentData[]>();
-  constructor(private postService: PostService, private userService: UserService) { }
+  userForm: FormGroup;
+  constructor(private formBuilder: FormBuilder, private postService: PostService, private userService: UserService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.createUserForm();
+    this.getPostData();
+  }
+
+  createUserForm() {
+    this.userForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      name: ['', Validators.required]
+    })
+  }
+
+  getPostData() {
     this.postService.getPosts().subscribe(response => {
       this.posts = response.data;
       this.posts.forEach(post => {
@@ -44,5 +58,24 @@ export class HomeComponent implements OnInit {
       document.getElementById(`commentBtn${index}`).style.display = 'none';
       this.commentsMap.delete(this.posts[index].id);
     }
+  }
+
+  onCreateUser() {
+    if (this.userForm.valid) {
+      this.userService.createUser(this.userForm.value).subscribe(response => {
+      });
+    }
+  }
+
+  openUserModal() {
+    document.getElementById("backdrop").style.display = "block";
+    document.getElementById("userModal").style.display = "block";
+    document.getElementById("userModal").classList.add("show");
+  }
+
+  closeUserModal() {
+    document.getElementById("backdrop").style.display = "none"
+    document.getElementById("userModal").style.display = "none"
+    document.getElementById("userModal").classList.remove("show");
   }
 }

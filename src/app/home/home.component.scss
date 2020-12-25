@@ -1,8 +1,9 @@
 @import 'src/variables';
 
 header {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: rgba(0, 0, 0, 0.8);
+    background-color: $accent;
+    opacity: 0.7;
+    color: #ffffff;
     border-radius: 50%;
 }
 
@@ -39,6 +40,10 @@ button[id^="commentBtn"] {
     display: none;
 }
 
+section[id^="comment"] {
+    box-shadow: 2px 2px 5px;
+}
+
 .clear-right {
     clear: right;
 }
@@ -46,4 +51,8 @@ button[id^="commentBtn"] {
 input,
 textarea {
     margin: 0.5rem auto;
+}
+
+#backdrop.modal-backdrop {
+    display: none;
 }
